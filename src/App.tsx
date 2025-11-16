@@ -3,8 +3,6 @@ import { useAIForm } from '@ejunior95/formai-react';
 import { IMaskInput } from 'react-imask';
 import './App.css';
 
-const PROXY_URL = "https://formai-iota.vercel.app/api/generate";
-
 type MaskPatterns = FormAIOptions['maskPatterns'];
 
 /**
@@ -81,7 +79,7 @@ function App() {
       <div>
         <h1>Teste do 🤖 formAI</h1>
         <FieldTester 
-          prompt="Quero um campo obrigatório para CNPJ com máscara" 
+          prompt="Quero um campo para CPF com máscara" 
           patterns={{ digit: '0' }}
         />
       </div>
