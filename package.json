@@ -10,8 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ejunior95/formai-core": "^0.1.1",
+    "@ejunior95/formai-react": "^0.1.1",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "react-imask": "^7.6.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

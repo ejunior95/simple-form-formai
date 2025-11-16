@@ -1,35 +1,92 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import type { FormAIOptions } from '@ejunior95/formai-core';
+import { useAIForm } from '@ejunior95/formai-react';
+import { IMaskInput } from 'react-imask';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+const PROXY_URL = "https://formai-iota.vercel.app/api/generate";
+
+type MaskPatterns = FormAIOptions['maskPatterns'];
+
+/**
+ * Componente de teste para o hook useAIForm
+ * Agora ele recebe o "prompt" como uma propriedade
+ */
+function FieldTester({ 
+  prompt, 
+  patterns
+}: { 
+  prompt: string, 
+  patterns?: MaskPatterns
+}) {
+  const {
+    value,
+    setValue,
+    error,
+    validate,
+    loading,
+    config
+  } = useAIForm(prompt, { 
+    maskPatterns: patterns
+  });
+
+  if (loading) {
+    return <h2>🤖 A gerar campo "{prompt}"...</h2>;
+  }
+
+  if (!config) {
+    return <h2>Erro: {error || "Não foi possível carregar a configuração."}</h2>;
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="field-container">
+      <label htmlFor={prompt}>{prompt}</label>
+
+      {/* SE A IA PEDIR MÁSCARA, USA O COMPONENTE DE MÁSCARA */}
+      {config.type === 'mask-text' && config.mask ? (
+        <IMaskInput
+          id={prompt}
+          mask={config.mask}
+          placeholder={config.placeholder || ''}
+          value={value}
+          // O 'onAccept' é o 'onChange' do IMaskInput
+          onAccept={(val: string) => setValue(val)}
+          onBlur={validate}
+          className={error ? 'input-error' : ''}
+        />
+      ) : (
+        /* CASO CONTRÁRIO, USA UM INPUT NORMAL */
+        <input
+          id={prompt}
+          type="text"
+          placeholder={config.placeholder || ''}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onBlur={validate}
+          className={error ? 'input-error' : ''}
+        />
+      )}
+
+      {error && <p className="error-message">{error}</p>}
+      <pre>
+        <strong>Configuração da IA:</strong>
+        {JSON.stringify(config, null, 2)}
+      </pre>
+    </div>
+  );
 }
 
-export default App
+function App() {
+  return (
+    <div className="App">
+      <div>
+        <h1>Teste do 🤖 formAI</h1>
+        <FieldTester 
+          prompt="Quero um campo obrigatório para CNPJ com máscara" 
+          patterns={{ digit: '0' }}
+        />
+      </div>
+    </div>
+  );
+}
+
+export default App;
