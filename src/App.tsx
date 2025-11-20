@@ -5,10 +5,6 @@ import './App.css';
 
 type MaskPatterns = FormAIOptions['maskPatterns'];
 
-/**
- * Componente de teste para o hook useAIForm
- * Agora ele recebe o "prompt" como uma propriedade
- */
 function FieldTester({ 
   prompt, 
   patterns
@@ -28,7 +24,7 @@ function FieldTester({
   });
 
   if (loading) {
-    return <h2>🤖 A gerar campo "{prompt}"...</h2>;
+    return <h2>🤖 Gerando campo do formulário... "{prompt}"...</h2>;
   }
 
   if (!config) {
@@ -39,7 +35,6 @@ function FieldTester({
     <div className="field-container">
       <label htmlFor={prompt}>{prompt}</label>
 
-      {/* SE A IA PEDIR MÁSCARA, USA O COMPONENTE DE MÁSCARA */}
       {config.type === 'mask-text' && config.mask ? (
         <IMaskInput
           id={prompt}
@@ -52,7 +47,6 @@ function FieldTester({
           className={error ? 'input-error' : ''}
         />
       ) : (
-        /* CASO CONTRÁRIO, USA UM INPUT NORMAL */
         <input
           id={prompt}
           type="text"
@@ -79,8 +73,8 @@ function App() {
       <div>
         <h1>Teste do 🤖 formAI</h1>
         <FieldTester 
-          prompt="Quero um campo para CPF com máscara" 
-          patterns={{ digit: '0' }}
+          prompt="give a input field for a zip code american format" 
+          patterns={{ digit: '0', letter: 'a' }}
         />
       </div>
     </div>
